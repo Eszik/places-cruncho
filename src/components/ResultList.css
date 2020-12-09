@@ -1,6 +1,5 @@
 .result-list {
-  grid-column: 2 / 3;
-  justify-self: start;
+  flex-grow: 1;
 }
 
 .icon {

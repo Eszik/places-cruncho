@@ -1,14 +1,9 @@
 .app {
   height: 100vh;
   width: 100vw;
-  display: inline-grid;
-  place-items: center;
-  column-gap: 1em;
+  display: flex;
 }
 
 .map-container {
-  height: 70vh;
-  width: 70vh;
-  justify-self: end;
-  grid-column: 1 / 2;
+  flex-grow: 6;
 }

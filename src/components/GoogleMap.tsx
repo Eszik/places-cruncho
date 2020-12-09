@@ -1,15 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { markAsUntransferable } from "worker_threads";
+import React, { useEffect, useRef } from "react";
 
 function GoogleMap(props: {
   handleResults: (results: google.maps.places.PlaceResult[]) => void;
   handleClick: (index: number) => void;
+  handlePosition: (position: google.maps.LatLng) => void;
+  selectedPlaceIndex: number | undefined;
 }) {
   let map: google.maps.Map;
   let position: google.maps.LatLng;
   let service: google.maps.places.PlacesService;
   let resultArray: google.maps.places.PlaceResult[];
   const markers: Map<string, google.maps.Marker> = new Map();
+
+  const mapElementRef = useRef<HTMLDivElement>(null);
 
   function sortResultsByRating(results: google.maps.places.PlaceResult[]) {
     return results.sort(
@@ -21,15 +24,15 @@ function GoogleMap(props: {
     navigator.geolocation.getCurrentPosition(
       ({ coords: { latitude, longitude } }) => {
         position = new google.maps.LatLng(latitude, longitude);
-        map = new google.maps.Map(
-          document.getElementById("map") as HTMLElement,
-          {
-            center: position,
-            zoom: 17,
-          }
-        );
+        map = new google.maps.Map(mapElementRef.current as HTMLDivElement, {
+          center: position,
+          zoom: 17,
+        });
+        props.handlePosition(position);
         searchNearbyRestaurants();
-      }
+      },
+      undefined,
+      { enableHighAccuracy: true }
     );
   }
 
@@ -41,7 +44,10 @@ function GoogleMap(props: {
         map,
         title: result.name,
       });
-      newMarker.addListener("click", () => props.handleClick(index));
+      newMarker.addListener("click", () => {
+        map.panTo(newMarker.getPosition() as google.maps.LatLng);
+        props.handleClick(index);
+      });
       markers.set(result.id as string, newMarker);
     }
   }
@@ -74,7 +80,13 @@ function GoogleMap(props: {
     }
   }, []);
 
-  return <div id="map" style={{ height: "100%", width: "100%" }}></div>;
+  return (
+    <div
+      id="map"
+      ref={mapElementRef}
+      style={{ height: "100%", width: "100%" }}
+    ></div>
+  );
 }
 
 export default GoogleMap;
