@@ -29,6 +29,14 @@ function GoogleMap(props: {
           zoom: 17,
         });
         props.handlePosition(position);
+        new google.maps.Marker({
+          position,
+          map,
+          title: "Vous êtes ici",
+          label: "!",
+        }).addListener("click", () => {
+          map.panTo(position);
+        });
         searchNearbyRestaurants();
       },
       undefined,
