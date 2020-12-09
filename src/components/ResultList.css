@@ -11,12 +11,13 @@
   padding : 2px
 }
 
-.result-list .result-card:first-child {
-  border: 1px solid black;
-}
 
-.result-list .result-card:not(:first-child) {
-  border-width: 0 1px 1px 1px;
+.result-list .result-card {
+  border-width: 0 0 1px 1px;
   border-color: black;
   border-style: solid;
+}
+
+.result-list .result-card:first-child {
+  border-top-width: 1px
 }

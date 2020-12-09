@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 function GoogleMap(props: {
   handleResults: (results: google.maps.places.PlaceResult[]) => void;
@@ -9,7 +9,6 @@ function GoogleMap(props: {
   let map: google.maps.Map;
   let position: google.maps.LatLng;
   let service: google.maps.places.PlacesService;
-  let resultArray: google.maps.places.PlaceResult[];
   const markers: Map<string, google.maps.Marker> = new Map();
 
   const mapElementRef = useRef<HTMLDivElement>(null);
@@ -44,9 +43,8 @@ function GoogleMap(props: {
     );
   }
 
-  function drawMarkers() {
-    console.log(resultArray);
-    for (const [index, result] of resultArray.entries()) {
+  function drawMarkers(results: google.maps.places.PlaceResult[]) {
+    for (const [index, result] of results.entries()) {
       const newMarker = new google.maps.Marker({
         position: result.geometry?.location,
         map,
@@ -70,23 +68,15 @@ function GoogleMap(props: {
         rankBy: google.maps.places.RankBy.DISTANCE,
         type: "restaurant",
       },
-      (results, status) => {
-        resultArray = sortResultsByRating(results.slice(0, 10));
-        props.handleResults(resultArray);
-        drawMarkers();
+      (resultArray, status) => {
+        const newResults = sortResultsByRating(resultArray.slice(0, 10));
+        props.handleResults(newResults);
+        drawMarkers(newResults);
       }
     );
   }
 
-  useEffect(() => {
-    const googleScript = document.getElementById(
-      "google-maps-script"
-    ) as HTMLScriptElement;
-    googleScript.addEventListener("load", initMap);
-    if (window.google) {
-      initMap();
-    }
-  }, []);
+  useEffect(initMap, []);
 
   return (
     <div
