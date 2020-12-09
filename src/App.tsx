@@ -1,24 +1,25 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import "./App.css";
+import GoogleMap from "./components/GoogleMap";
+import ResultList from "./components/ResultList";
 
 function App() {
+  const [results, setResults] = useState<google.maps.places.PlaceResult[]>([]);
+  const [selectedPlaceIndex, setSelectedPlaceIndex] = useState<number>();
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app">
+      <div className="map-container">
+        <GoogleMap
+          handleResults={(results) => setResults(results)}
+          handleClick={(index) => setSelectedPlaceIndex(index)}
+        />
+      </div>
+      <ResultList
+        results={results.slice(0, 10)}
+        selectedPlaceIndex={selectedPlaceIndex}
+        handleClick={(index) => setSelectedPlaceIndex(index)}
+      />
     </div>
   );
 }

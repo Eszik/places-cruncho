@@ -1,0 +1,23 @@
+.result-list {
+  grid-column: 2 / 3;
+  justify-self: start;
+}
+
+.icon {
+  height: 18px;
+  width: auto
+}
+
+.result-card {
+  padding : 2px
+}
+
+.result-list .result-card:first-child {
+  border: 1px solid black;
+}
+
+.result-list .result-card:not(:first-child) {
+  border-width: 0 1px 1px 1px;
+  border-color: black;
+  border-style: solid;
+}
