@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 
 function GoogleMap(props: {
   handleResults: (results: google.maps.places.PlaceResult[]) => void;
